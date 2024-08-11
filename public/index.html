@@ -1,71 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WebRTC Video Call</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-      background-color: #f0f0f0;
-    }
-    h1 {
-      margin-bottom: 20px;
-      color: #333;
-    }
-    #roomSelection {
-      margin-bottom: 20px;
-    }
-    #room {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      width: 200px;
-      text-align: center;
-    }
-    #joinRoom {
-      padding: 10px 20px;
-      background-color: #007BFF;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-left: 10px;
-    }
-    #videos {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-    }
-    video {
-      border: 2px solid #007BFF;
-      border-radius: 10px;
-      margin-bottom: 10px;
-      width: 60%;
-      max-width: 400px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Call App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #roomSelection {
+            text-align: center;
+        }
+        #roomSelection input {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: 1px solid #007BFF;
+            font-size: 1rem;
+        }
+        #roomSelection button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #roomSelection button:hover {
+            background-color: #0056b3;
+        }
+        #videos {
+            display: none;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            width: 90%;
+            max-width: 1200px;
+        }
+        video {
+            border: 2px solid #007BFF;
+            border-radius: 10px;
+            width: 45%;
+            max-width: 400px;
+            height: auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        #localVideo {
+            border: 3px solid #28a745;
+            width: 45%;
+            max-width: 400px;
+            height: auto;
+        }
+    </style>
 </head>
 <body>
-  <h1>WebRTC Video Call</h1>
-
-  <div id="roomSelection">
-    <input type="text" id="room" placeholder="Enter Room Name">
-    <button id="joinRoom">Join Room</button>
-  </div>
-
-  <div id="videos">
-    <video id="localVideo" autoplay muted></video>
-    <video id="remoteVideo" autoplay></video>
-  </div>
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="main.js"></script>
+    <div id="roomSelection">
+        <h2>Join a Video Call Room</h2>
+        <input type="text" id="room" placeholder="Enter room name" required>
+        <button id="joinRoom">Join Room</button>
+    </div>
+    <div id="videos">
+        <video id="localVideo" autoplay muted></video>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="main.js"></script>
 </body>
 </html>

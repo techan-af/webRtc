@@ -16,16 +16,20 @@ io.on('connection', (socket) => {
     console.log(`User joined room: ${room}`);
   });
 
+  socket.on('ready', (room) => {
+    socket.to(room).emit('ready', socket.id);
+  });
+
   socket.on('offer', (data) => {
-    socket.to(data.room).emit('offer', data.offer);
+    socket.to(data.room).emit('offer', { offer: data.offer, socketId: socket.id });
   });
 
   socket.on('answer', (data) => {
-    socket.to(data.room).emit('answer', data.answer);
+    socket.to(data.room).emit('answer', { answer: data.answer, socketId: socket.id });
   });
 
   socket.on('candidate', (data) => {
-    socket.to(data.room).emit('candidate', data.candidate);
+    socket.to(data.room).emit('candidate', { candidate: data.candidate, socketId: socket.id });
   });
 
   socket.on('disconnect', () => {
