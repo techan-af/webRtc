@@ -1,10 +1,15 @@
 const socket = io();
 
+const roomSelection = document.getElementById('roomSelection');
+const roomInput = document.getElementById('room');
+const joinRoomButton = document.getElementById('joinRoom');
+const videos = document.getElementById('videos');
 const localVideo = document.getElementById('localVideo');
 const remoteVideo = document.getElementById('remoteVideo');
 
 let localStream;
 let peerConnection;
+let room;
 
 const iceServers = {
   iceServers: [
@@ -12,13 +17,28 @@ const iceServers = {
   ]
 };
 
-// Get user media (webcam and microphone)
-navigator.mediaDevices.getUserMedia({ video: true, audio: true })
-  .then(stream => {
-    localVideo.srcObject = stream;
-    localStream = stream;
-  })
-  .catch(error => console.error('Error accessing media devices.', error));
+// Join a room
+joinRoomButton.addEventListener('click', () => {
+  room = roomInput.value;
+  if (room === '') {
+    alert('Please enter a room name');
+    return;
+  }
+  socket.emit('join', room);
+  roomSelection.style.display = 'none';
+  videos.style.display = 'flex';
+
+  // Get user media
+  navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    .then(stream => {
+      localVideo.srcObject = stream;
+      localStream = stream;
+      if (room) {
+        startCall();
+      }
+    })
+    .catch(error => console.error('Error accessing media devices.', error));
+});
 
 socket.on('offer', (offer) => {
   peerConnection = new RTCPeerConnection(iceServers);
@@ -29,7 +49,7 @@ socket.on('offer', (offer) => {
   peerConnection.createAnswer()
     .then(answer => {
       peerConnection.setLocalDescription(answer);
-      socket.emit('answer', answer);
+      socket.emit('answer', { answer, room });
     });
 
   peerConnection.ontrack = (event) => {
@@ -38,7 +58,7 @@ socket.on('offer', (offer) => {
 
   peerConnection.onicecandidate = (event) => {
     if (event.candidate) {
-      socket.emit('candidate', event.candidate);
+      socket.emit('candidate', { candidate: event.candidate, room });
     }
   };
 });
@@ -58,7 +78,7 @@ function startCall() {
   peerConnection.createOffer()
     .then(offer => {
       peerConnection.setLocalDescription(offer);
-      socket.emit('offer', offer);
+      socket.emit('offer', { offer, room });
     });
 
   peerConnection.ontrack = (event) => {
@@ -67,10 +87,7 @@ function startCall() {
 
   peerConnection.onicecandidate = (event) => {
     if (event.candidate) {
-      socket.emit('candidate', event.candidate);
+      socket.emit('candidate', { candidate: event.candidate, room });
     }
   };
 }
-
-// Start the call when both peers are ready
-localVideo.addEventListener('canplay', startCall);

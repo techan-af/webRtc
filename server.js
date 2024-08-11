@@ -11,16 +11,21 @@ app.use(express.static('public'));
 io.on('connection', (socket) => {
   console.log('A user connected');
 
+  socket.on('join', (room) => {
+    socket.join(room);
+    console.log(`User joined room: ${room}`);
+  });
+
   socket.on('offer', (data) => {
-    socket.broadcast.emit('offer', data);
+    socket.to(data.room).emit('offer', data.offer);
   });
 
   socket.on('answer', (data) => {
-    socket.broadcast.emit('answer', data);
+    socket.to(data.room).emit('answer', data.answer);
   });
 
   socket.on('candidate', (data) => {
-    socket.broadcast.emit('candidate', data);
+    socket.to(data.room).emit('candidate', data.candidate);
   });
 
   socket.on('disconnect', () => {

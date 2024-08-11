@@ -4,11 +4,66 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WebRTC Video Call</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+    #roomSelection {
+      margin-bottom: 20px;
+    }
+    #room {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 200px;
+      text-align: center;
+    }
+    #joinRoom {
+      padding: 10px 20px;
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 10px;
+    }
+    #videos {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+    }
+    video {
+      border: 2px solid #007BFF;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      width: 60%;
+      max-width: 400px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Simple WebRTC Video Call</h1>
-  <video id="localVideo" autoplay muted></video>
-  <video id="remoteVideo" autoplay></video>
+  <h1>WebRTC Video Call</h1>
+
+  <div id="roomSelection">
+    <input type="text" id="room" placeholder="Enter Room Name">
+    <button id="joinRoom">Join Room</button>
+  </div>
+
+  <div id="videos">
+    <video id="localVideo" autoplay muted></video>
+    <video id="remoteVideo" autoplay></video>
+  </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script src="main.js"></script>
